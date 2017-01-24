@@ -10,7 +10,6 @@ const loadTop = (access_token) => {
 
   Promise.all([profilePending, playlistsPending]).then(([profileReq, playlistsReq]) => {
     Promise.all([profileReq.json(), playlistsReq.json()]).then(([profile, playlists]) => {
-      console.log(playlists);
       const playlist = playlists.items.filter(item => item.name === 'Your Top Songs')[0];
       if (playlist) {
         populate(playlist, profile, options);
