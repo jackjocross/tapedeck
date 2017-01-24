@@ -1,27 +1,14 @@
 #! /usr/bin/env node
 
-import request from 'request';
 import fetch from 'isomorphic-fetch';
 
+import refreshToken from '../utils/refreshToken';
 import secrets from '../secrets.json';
 
-const { client_id, client_secret, refresh_token } = secrets;
-let { access_token } = secrets;
-
-const authOptions = {
-  url: 'https://accounts.spotify.com/api/token',
-  headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-  form: {
-    grant_type: 'refresh_token',
-    refresh_token
-  },
-  json: true
-};
+const { refresh_token } = secrets;
 
 const loadHypem = (name, mode) => {
-  request.post(authOptions, (error, response, body) => {
-    access_token = body.access_token;
-
+  refreshToken(refresh_token).then(({ access_token, refresh_token }) => {
     const options = {
       headers: { 'Authorization': 'Bearer ' + access_token },
     };

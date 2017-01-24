@@ -11,59 +11,60 @@ import request from 'request';
 import querystring from 'querystring';
 import cookieParser from 'cookie-parser';
 import fetch from 'isomorphic-fetch';
+import randomstring from 'randomstring';
+import mongoose from 'mongoose';
 
 import loadHypem from './loaders/hypem';
-
+import loadTop from './loaders/top';
+import refreshToken from './utils/refreshToken';
 import secrets from './secrets.json';
 
 const { client_id, client_secret } = secrets; 
 const redirect_uri = 'http://localhost:3000/authorized'; // Your redirect uri
 
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
-let generateRandomString = function(length) {
-  let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+// Setup db conection
+mongoose.connect('mongodb://localhost/tapedeck');
+const db = mongoose.connection;
 
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('db connected!');
+});
 
-let stateKey = 'spotify_auth_state';
+const tokenSchema = mongoose.Schema({
+  access_token: String,
+  refresh_token: String
+});
+const Token = mongoose.model('Token', tokenSchema);
 
+// Setup app and routes
 let app = express();
 
 app.use(express.static(__dirname + '../client/build'))
    .use(cookieParser());
 
 app.get('/login', function(req, res) {
-  let state = generateRandomString(16);
-  res.cookie(stateKey, state);
-
-  // your application requests authorization
-  let scope = 'user-top-read user-follow-read user-library-read playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
       client_id: client_id,
-      scope: scope,
+      scope: 'user-top-read user-follow-read user-library-read playlist-modify-public',
       redirect_uri: redirect_uri,
-      state: state
+      state: randomstring.generate(16)
     }));
 });
 
 app.get('/hypem', () => {
   loadHypem('Hypem Weekly', 'lastweek');
-  loadHypem('Hypem Now', 'now');
 });
 
 app.get('/top', () => {
-
+  Token.find({}, 'refresh_token', (err, tokens) =>
+    tokens.forEach(({ refresh_token }) =>
+      refreshToken(refresh_token).then(
+        ({ access_token }) => loadTop(access_token))
+    )
+  );
 })
 
 app.get('/authorized', (req, res) => {
@@ -82,9 +83,17 @@ app.get('/authorized', (req, res) => {
   };
 
   request.post(authOptions, (error, response, body) => {
-    const { access_token, refresh_token } = body;
-    console.log(access_token, refresh_token);
-    // add refresh token to database
+    const { access_token, refresh_token } = body;    
+    const tokenObj = { access_token, refresh_token };
+
+    // add refresh_token to database
+    Token.findOne(tokenObj, (token) => {
+      console.log(token);
+      if (!token) {
+        const insertToken = new Token(tokenObj);
+        insertToken.save();
+      }
+    });
   });
 });
 
