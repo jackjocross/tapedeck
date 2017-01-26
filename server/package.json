@@ -18,12 +18,21 @@
     "fs": "0.0.2",
     "isomorphic-fetch": "^2.2.1",
     "mongoose": "^4.7.7",
+    "randomstring": "^1.1.5",
+    "request": "^2.79.0",
     "request-promise": "^4.1.1"
   },
   "scripts": {
     "start": "babel-node index.js",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",
-    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1"
+    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
+    "lint": "./node_modules/.bin/eslint **.js"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb-base": "^11.0.1",
+    "eslint-plugin-import": "^2.2.0"
   }
 }
