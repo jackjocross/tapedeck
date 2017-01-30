@@ -1,0 +1,16 @@
+{
+  "playlists": [
+    {
+      "name": "Your Top Songs",
+      "description": "Your top 50 songs of the last 4 weeks.",
+      "type": "personal",
+      "route_param": "your-top-songs"
+    },
+    {
+      "name": "Hypem Weekly",
+      "description": "Top songs on The Hype Machine last week.",
+      "type": "public",
+      "route_param": "hypem-weekly"
+    }
+  ]
+}
