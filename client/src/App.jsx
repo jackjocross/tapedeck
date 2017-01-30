@@ -1,13 +1,21 @@
 import React from 'react';
+import { BrowserRouter, Match } from 'react-router';
+
+import Catalog from './components/Catalog';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Playlist from './components/Playlist';
 
 const App = () =>
-  <div className="App">
-    <div className="App-header">
-      <h2>Welcome to Tapedeck</h2>
-    </div>
-    <p className="App-intro">
-      To get started, edit <code>src/App.js</code> and save to reload.
-    </p>
+  <div>
+    <BrowserRouter>
+      <div>
+        <Header />
+        <Match pattern="/" exactly component={Catalog} />
+        <Match pattern="/:playlist" exactly component={Playlist} />
+        <Footer />
+      </div>
+    </BrowserRouter>
   </div>;
 
 export default App;
