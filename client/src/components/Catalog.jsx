@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-class Catalog extends Component {
-  componentDidMount() {
-    console.log('fetch /playlist');
-  }
+import PlaylistTile from './PlaylistTile';
 
-  render() {
-    return (
-      <div>
-        Catalog here
-      </div>
-    );
-  }
-}
+const Catalog = ({ data: { playlists } }) =>
+  <div>
+    {playlists.map(playlist => <PlaylistTile key={playlist.route_param} {...playlist} />)}
+  </div>;
+
+Catalog.propTypes = {
+  data: PropTypes.shape({
+    playlists: PropTypes.array,
+  }),
+};
+
+Catalog.defaultProps = {
+  data: {},
+};
 
 export default Catalog;
