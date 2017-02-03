@@ -9,9 +9,8 @@
     "jsx-a11y",
     "react"
   ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "airbnb"
-  ]
+  "extends": "airbnb",
+  "rules": {
+    "react/jsx-first-prop-new-line": 0
+  }
 }

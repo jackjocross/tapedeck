@@ -1,28 +1,49 @@
 import React from 'react';
-import { BrowserRouter, Match } from 'react-router';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 
 import Catalog from './components/Catalog';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Playlist from './components/Playlist';
 import Fetch from './components/Fetch';
+import Handler from './components/Handler';
+import reducer from './ducks';
+
+// eslint-disable-next-line no-underscore-dangle
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(
+  applyMiddleware(thunk),
+));
 
 const App = () =>
-  <div>
-    <BrowserRouter>
-      <div>
-        <Header />
-        <Match exactly pattern="/">
-          {() =>
-            <Fetch input="config.json">
-              <Catalog />
-            </Fetch>
-          }
-        </Match>
-        <Match exactly pattern="/:playlist" component={Playlist} />
-        <Footer />
-      </div>
-    </BrowserRouter>
-  </div>;
+  <Provider store={store}>
+    <div>
+      <BrowserRouter>
+        <div>
+          <Header />
+          <Route exact path="/" render={() =>
+            <Fetch input="catalog.json">
+              <Handler>
+                <Catalog />
+              </Handler>
+            </Fetch>}
+          />
+          <Route exact path="/:playlist" render={() =>
+            <Fetch input="catalog.json" render={(catalog, catErr, catLoad) =>
+              <Fetch input="playlist.json" render={(playlist, playErr, playLoad) =>
+                <Handler error={catErr || playErr} loading={catLoad || playLoad}>
+                  <Playlist catalog={catalog} playlist={playlist} />
+                </Handler>}
+              />}
+            />}
+          />
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </div>
+  </Provider>;
 
 export default App;

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class PlaylistTile extends Component {
 
@@ -10,9 +10,6 @@ class PlaylistTile extends Component {
     route_param: PropTypes.string.isRequired,
   }
 
-  onClick = () => {
-    console.log(this.props.route_param);
-  };
   label = this.props.type === 'personal' ? 'Create' : 'Follow';
 
   render() {
