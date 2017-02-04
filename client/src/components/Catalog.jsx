@@ -12,7 +12,6 @@ const Catalog = ({ data: { playlists, client_id: clientId } }) =>
 Catalog.propTypes = {
   data: PropTypes.shape({
     playlists: PropTypes.array,
-    client_id: PropTypes.string,
   }),
 };
 

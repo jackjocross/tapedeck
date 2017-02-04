@@ -7,6 +7,8 @@ import loadHypem from './loaders/hypem';
 import loadTop from './loaders/top';
 import refreshToken from './utils/refreshToken';
 import auth from './controllers/auth';
+import base from './controllers/base';
+import loggedIn from './middlewares/loggedIn';
 import initDb, { loadDb } from './db';
 
 const APP_PORT = 3000;
@@ -18,13 +20,10 @@ initDb();
 const app = express();
 
 app.use(cookieParser());
+
 app.get('/auth/*', auth);
-
-app.get(['/', '/create/*', '/follow/*'], (req, res) => {
-  console.log(req.cookies.tapedeck);
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
-
+app.get(['/'], base);
+app.get(['/create/*', '/follow/*'], loggedIn, base);
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('/hypem', () => {
