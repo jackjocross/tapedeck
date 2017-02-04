@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router-dom';
+import querystring from 'querystring';
+import randomstring from 'randomstring';
+
+import Button from './Button';
 
 class PlaylistTile extends Component {
 
@@ -8,6 +11,19 @@ class PlaylistTile extends Component {
     description: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     route_param: PropTypes.string.isRequired,
+    clientId: PropTypes.string.isRequired,
+  }
+
+  onClick = () => {
+    const query = querystring.stringify({
+      response_type: 'code',
+      client_id: this.props.clientId,
+      scope: 'user-top-read user-follow-read user-library-read playlist-modify-public',
+      redirect_uri: `http://localhost:3000/auth/${this.props.route_param}`,
+      state: randomstring.generate(16),
+    });
+
+    window.location.href = `https://accounts.spotify.com/authorize?${query}`;
   }
 
   label = this.props.type === 'personal' ? 'Create' : 'Follow';
@@ -17,7 +33,7 @@ class PlaylistTile extends Component {
       <div>
         <h2>{this.props.name}</h2>
         <p>{this.props.description}</p>
-        <Link to={this.props.route_param}>{this.label}</Link>
+        <Button label={this.label} onClick={this.onClick} />
       </div>
     );
   }

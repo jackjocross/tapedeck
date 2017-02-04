@@ -13,6 +13,7 @@ import querystring from 'querystring';
 import cookieParser from 'cookie-parser';
 import randomstring from 'randomstring';
 import mongoose from 'mongoose';
+import path from 'path';
 
 import loadHypem from './loaders/hypem';
 import loadTop from './loaders/top';
@@ -40,8 +41,13 @@ const Token = mongoose.model('Token', tokenSchema);
 // Setup app and routes
 const app = express();
 
-app.use(express.static(`${__dirname}../client/build`))
-   .use(cookieParser());
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.use('/your-top-songs', express.static(path.join(__dirname, '../client/build')));
+
+app.get('/auth/:playlist', (req, res) => {
+  console.log(req.params);
+  res.redirect('http://localhost:3000/your-top-songs');
+});
 
 app.get('/login', (req, res) => {
   const query = querystring.stringify({
