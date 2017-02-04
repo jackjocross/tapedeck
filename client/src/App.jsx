@@ -31,9 +31,9 @@ const App = () =>
               </Handler>
             </Fetch>}
           />
-          <Route exact path="/:playlist" render={() =>
-            <Fetch input="catalog.json" render={(catalog, catErr, catLoad) =>
-              <Fetch input="playlist.json" render={(playlist, playErr, playLoad) =>
+          <Route exact path="/:action/:playlist" render={() =>
+            <Fetch input="http://localhost:3000/catalog.json" render={(catalog, catErr, catLoad) =>
+              <Fetch input="http://localhost:3000/playlist.json" render={(playlist, playErr, playLoad) =>
                 <Handler error={catErr || playErr} loading={catLoad || playLoad}>
                   <Playlist catalog={catalog} playlist={playlist} />
                 </Handler>}

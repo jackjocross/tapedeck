@@ -19,14 +19,16 @@ class PlaylistTile extends Component {
       response_type: 'code',
       client_id: this.props.clientId,
       scope: 'user-top-read user-follow-read user-library-read playlist-modify-public',
-      redirect_uri: `http://localhost:3000/auth/${this.props.route_param}`,
+      redirect_uri: `http://localhost:3000/auth/${this.pathParam}/${this.props.route_param}`,
       state: randomstring.generate(16),
     });
 
     window.location.href = `https://accounts.spotify.com/authorize?${query}`;
   }
 
+  // Move to declarative logic later
   label = this.props.type === 'personal' ? 'Create' : 'Follow';
+  pathParam = this.props.type === 'personal' ? 'create' : 'follow'
 
   render() {
     return (
