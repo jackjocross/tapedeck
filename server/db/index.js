@@ -17,6 +17,7 @@ const initDb = () => {
     cookie: String,
     access_token: String,
     refresh_token: String,
+    plugins: Array,
   });
   tokenSchema.index({ cookie: 1, access_token: 1, refresh_token: 1 });
 
