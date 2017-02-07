@@ -7,7 +7,6 @@ import refreshToken from './middlewares/refreshToken';
 import auth from './controllers/auth';
 import base from './controllers/base';
 import create from './controllers/create';
-import follow from './controllers/follow';
 import loggedIn from './middlewares/loggedIn';
 import initDb from './db';
 
@@ -25,7 +24,6 @@ app.get('/', base);
 app.get('/auth/*', auth);
 app.get(['/create/*', '/follow/*'], loggedIn, base);
 app.put('/create/:playlist', refreshToken, create);
-app.put('/follow/:playlist', refreshToken, follow);
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.listen(APP_PORT);
