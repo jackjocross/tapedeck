@@ -31,13 +31,13 @@ const App = () =>
               </Handler>
             </Fetch>}
           />
-          <Route exact path="/:action/:playlist" render={() =>
+          <Route exact path="/:action/:playlist" render={({ match }) =>
             <Fetch input="http://localhost:3000/catalog.json" render={(catalog, catErr, catLoad) =>
-              <Fetch input="http://localhost:3000/playlist.json" render={(playlist, playErr, playLoad) =>
+              (catalog ? <Fetch input={`http://localhost:3000${match.url}`} init={{ method: 'PUT', credentials: 'same-origin' }} render={(res, playErr, playLoad) =>
                 <Handler error={catErr || playErr} loading={catLoad || playLoad}>
-                  <Playlist catalog={catalog} playlist={playlist} />
+                  <Playlist catalog={catalog} playlist={res} />
                 </Handler>}
-              />}
+              /> : null)}
             />}
           />
           <Footer />
