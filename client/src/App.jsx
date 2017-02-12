@@ -33,7 +33,7 @@ const App = () =>
           />
           <Route exact path="/:action/:playlist" render={({ match }) =>
             <Fetch input="http://localhost:3000/catalog.json" render={(catalog, catErr, catLoad) =>
-              (catalog ? <Fetch input={`http://localhost:3000${match.url}`} init={{ method: 'PUT', credentials: 'same-origin' }} render={(res, playErr, playLoad) =>
+              (catalog ? <Fetch input={`http://localhost:3000${match.url}`} init={{ method: 'POST', credentials: 'same-origin' }} render={(res, playErr, playLoad) =>
                 <Handler error={catErr || playErr} loading={catLoad || playLoad}>
                   <Playlist catalog={catalog} playlist={res} />
                 </Handler>}

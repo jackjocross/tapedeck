@@ -1,8 +1,10 @@
 import request from 'request-promise';
+
 import { loadFromDb, insertOrUpdateDb } from '../db';
+import { decrypt } from '../utils';
 
 export default function (req, res, next) {
-  loadFromDb({ cookie: req.cookies.tapedeck })
+  loadFromDb({ id: decrypt(req.cookies.tpdk) })
     .then((token) => {
       const authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -20,12 +22,9 @@ export default function (req, res, next) {
         ({ access_token }) => {
           insertOrUpdateDb({
             access_token,
-            cookie: req.cookies.tapedeck,
+            id: req.cookies.tpdk,
           });
           next();
-        })
-        .catch((err) => {
-          console.log(err);
         });
     });
 }

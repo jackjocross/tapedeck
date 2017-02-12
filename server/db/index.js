@@ -14,20 +14,20 @@ const initDb = () => {
   });
 
   tokenSchema = mongoose.Schema({
-    cookie: String,
+    id: String,
     access_token: String,
     refresh_token: String,
     plugins: Object,
   });
-  tokenSchema.index({ cookie: 1, access_token: 1, refresh_token: 1 });
+  tokenSchema.index({ id: 1, access_token: 1, refresh_token: 1 });
 
   Token = mongoose.model('Token', tokenSchema);
 };
 
 export const insertOrUpdateDb = (opts) => {
   console.log('Updating db..', opts);
-  const { cookie } = opts;
-  return Token.findOneAndUpdate({ cookie }, opts, { upsert: true }).exec();
+  const { id } = opts;
+  return Token.findOneAndUpdate({ id }, opts, { upsert: true }).exec();
 };
 
 export const loadDb = () => {
@@ -37,8 +37,8 @@ export const loadDb = () => {
 
 export const loadFromDb = (opts) => {
   console.log('Loading from db..', opts);
-  const { cookie } = opts;
-  return Token.findOne({ cookie }).exec();
+  const { id } = opts;
+  return Token.findOne({ id }).exec();
 };
 
 export default initDb;

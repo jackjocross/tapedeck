@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.get('/', base);
 app.get('/auth/*', auth);
 app.get(['/create/*', '/follow/*'], loggedIn, base);
-app.put('/create/:playlist', refreshToken, create);
+app.post('/create/:playlist', refreshToken, create);
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.listen(APP_PORT);

@@ -1,6 +1,6 @@
 import request from 'request';
 import fetch from 'isomorphic-fetch';
-import md5 from 'md5';
+import { encrypt } from '../utils';
 
 import { insertOrUpdateDb } from '../db';
 
@@ -34,10 +34,8 @@ export default function (req, res) {
       .then(reponse => reponse.json())
       .then((me) => {
         const { id } = me;
-        const cookie = md5(id);
-        res.cookie('tapedeck', cookie);
-        const tokenObj = { cookie, access_token, refresh_token };
-
+        res.cookie('tpdk', encrypt(id));
+        const tokenObj = { id, access_token, refresh_token };
         insertOrUpdateDb(tokenObj).then(() => {
           res.redirect(`http://localhost:3000/${req.params[0]}`);
         });

@@ -2,7 +2,7 @@ import querystring from 'querystring';
 import randomstring from 'randomstring';
 
 export default function (req, res, next) {
-  if (req.cookies.tapedeck) {
+  if (req.cookies.tpdk) {
     next();
   } else {
     const query = querystring.stringify({
