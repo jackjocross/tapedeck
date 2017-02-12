@@ -1,28 +1,12 @@
-import { loadFromDb, insertOrUpdateDb } from '../db';
-import { decrypt } from '../utils';
+import { decrypt } from '../utils/crypto';
+import create from '../loaders/create';
 
 export default function (req, res) {
-  // eslint-disable-next-line global-require, import/no-dynamic-require
-  const plugin = require(`tapedeck-plugin-${req.params.playlist}`).default;
-  loadFromDb({ id: decrypt(req.cookies.tpdk) })
-    .then((data) => {
-      const { id, access_token, refresh_token, plugins } = data;
-      plugin(access_token, plugins[req.params.playlist])
-        .then((pluginStore) => {
-          insertOrUpdateDb({
-            id,
-            access_token,
-            refresh_token,
-            plugins: {
-              ...plugins,
-              [req.params.playlist]: pluginStore,
-            },
-          });
-
-          res.send('success!');
-        })
-        .catch((err) => {
-          res.send(err);
-        });
+  create(decrypt(req.cookies.tpdk), req.params.playlist)
+    .then(() => {
+      res.send('success!');
+    })
+    .catch((err) => {
+      res.send(err);
     });
 }

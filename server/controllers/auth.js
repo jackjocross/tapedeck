@@ -1,6 +1,6 @@
 import request from 'request';
 import fetch from 'isomorphic-fetch';
-import { encrypt } from '../utils';
+import { encrypt } from '../utils/crypto';
 
 import { insertOrUpdateDb } from '../db';
 

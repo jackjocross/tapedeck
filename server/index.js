@@ -9,11 +9,15 @@ import base from './controllers/base';
 import create from './controllers/create';
 import loggedIn from './middlewares/loggedIn';
 import initDb from './db';
+import initCron from './cron';
 
 const APP_PORT = 3000;
 
 // Connect to db
 initDb();
+
+// Setup cron jobs
+initCron();
 
 // Setup app and routes
 const app = express();

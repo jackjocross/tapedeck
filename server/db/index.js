@@ -32,7 +32,7 @@ export const insertOrUpdateDb = (opts) => {
 
 export const loadDb = () => {
   console.log('Loading db..');
-  return Token.find({}, 'refresh_token').exec();
+  return Token.find({}).exec();
 };
 
 export const loadFromDb = (opts) => {
