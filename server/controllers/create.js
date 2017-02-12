@@ -7,7 +7,7 @@ export default function (req, res) {
   loadFromDb({ id: decrypt(req.cookies.tpdk) })
     .then((data) => {
       const { id, access_token, refresh_token, plugins } = data;
-      plugin(access_token)
+      plugin(access_token, plugins[req.params.playlist])
         .then((pluginStore) => {
           insertOrUpdateDb({
             id,

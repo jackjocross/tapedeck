@@ -4,7 +4,8 @@ import { loadFromDb, insertOrUpdateDb } from '../db';
 import { decrypt } from '../utils';
 
 export default function (req, res, next) {
-  loadFromDb({ id: decrypt(req.cookies.tpdk) })
+  const id = decrypt(req.cookies.tpdk);
+  loadFromDb({ id })
     .then((token) => {
       const authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -21,8 +22,8 @@ export default function (req, res, next) {
       return request.post(authOptions).then(
         ({ access_token }) => {
           insertOrUpdateDb({
+            id,
             access_token,
-            id: req.cookies.tpdk,
           });
           next();
         });
