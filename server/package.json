@@ -22,7 +22,7 @@
     "randomstring": "^1.1.5",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
-    "tapedeck-plugin-your-top-songs": "^1.0.0"
+    "tapedeck-plugin-your-top-songs": "git://github.com/jayjaycross/tapedeck-plugin-your-top-songs.git"
   },
   "scripts": {
     "start": "nodemon index.js --exec babel-node --presets es2015,stage-2",
