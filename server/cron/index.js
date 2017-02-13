@@ -5,7 +5,7 @@ import create from '../loaders/create';
 import refreshToken from '../utils/refreshToken';
 
 export default function () {
-  cron.schedule('*/5 * * * *', () => {
+  cron.schedule('10 4 * * *', () => {
     loadDb().then((tokens) => {
       tokens.forEach(({ id }) =>
         refreshToken(id).then(({ plugins }) =>
